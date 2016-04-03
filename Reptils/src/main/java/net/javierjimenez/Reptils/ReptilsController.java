@@ -11,7 +11,7 @@ import java.sql.Statement;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -46,6 +46,10 @@ public class ReptilsController implements Initializable {
 	private Statement animals = null;
 
 	private Connection conn = null;
+	
+	private String family = null;
+	
+	private int f = 0;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -65,33 +69,40 @@ public class ReptilsController implements Initializable {
 
 			System.exit(0);
 		}
-
-		ResultSet family;
+		
+		familia.getItems().addAll("Amfibis", "Rèptils");
+	}
+	
+	public void seleccionarOrdre(ActionEvent event) {
+		
+	}
+	
+	public void seleccionarFamilia(ActionEvent event) {
+		
+		family = familia.getValue().toString();
+		
+		ResultSet ordre;
 		
 		try {
+		
+		ordre = animals.executeQuery("SELECT nom FROM ordres WHERE familia = (SELECT codi FROM families WHERE nom = '" + family + "')");
+		
+		System.out.println("Total " + ordre.getFetchSize());
+		
+		for(int i = 0; i < ordre.getFetchSize(); i++){
 			
-			System.out.println("Inicio");
+			System.out.println(ordre.getString(i + 1));
 			
-			family = animals.executeQuery("SELECT nom FROM families");
+			System.out.println("Ronda " + i);
 			
-			System.out.println("Total " + family.getFetchSize());
-			
-			for(int i = 0; i < family.getFetchSize(); i++){
-				
-				System.out.println(family.getString(i + 1));
-				
-				System.out.println("Ronda " + i);
-				
-			}
-			
-			System.out.println("Fin");
-			
+		}
+		
+		System.out.println("Fin");
+		
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		// family.getString(arg0)
-		// familia.getItems().addAll(arg0);
+		
 	}
 }

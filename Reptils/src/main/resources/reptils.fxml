@@ -90,12 +90,12 @@
                   <Insets left="152.0" />
                </GridPane.margin>
             </Button>
-            <ComboBox fx:id="familia" prefWidth="265.0" GridPane.columnIndex="1">
+            <ComboBox fx:id="familia" onAction="#seleccionarFamilia" prefWidth="265.0" promptText="Escollir familia" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets top="-63.0" />
                </GridPane.margin>
             </ComboBox>
-            <ComboBox fx:id="ordre" prefWidth="265.0" GridPane.columnIndex="1">
+            <ComboBox fx:id="ordre" onAction="#seleccionarOrdre" prefWidth="265.0" promptText="Escollir ordre" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets bottom="-55.0" />
                </GridPane.margin>

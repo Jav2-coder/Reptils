@@ -46,63 +46,67 @@ public class ReptilsController implements Initializable {
 	private Statement animals = null;
 
 	private Connection conn = null;
-	
+
 	private String family = null;
 	
-	private int f = 0;
-
+	private String ord = null;
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
 		try {
-
 			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/reptils", "foot", "ball");
 			animals = conn.createStatement();
-
 		} catch (SQLException e) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Problema de conexión con BD");
 			alert.setHeaderText("ERROR: Problema de conexión");
 			alert.setContentText("Error al conectar con la base de datos.\nRevise si esta operativa.");
-
 			alert.showAndWait();
 
 			System.exit(0);
 		}
-		
 		familia.getItems().addAll("Amfibis", "Rèptils");
 	}
-	
+
 	public void seleccionarOrdre(ActionEvent event) {
+
+		ord = ordre.getValue().toString();
 		
-	}
-	
-	public void seleccionarFamilia(ActionEvent event) {
+		System.out.println(ord);
 		
-		family = familia.getValue().toString();
-		
-		ResultSet ordre;
+		ResultSet a;
 		
 		try {
-		
-		ordre = animals.executeQuery("SELECT nom FROM ordres WHERE familia = (SELECT codi FROM families WHERE nom = '" + family + "')");
-		
-		System.out.println("Total " + ordre.getFetchSize());
-		
-		for(int i = 0; i < ordre.getFetchSize(); i++){
+			a = animals.executeQuery("SELECT * FROM animals WHERE ordre = "
+					+ "(SELECT codi from ordres WHERE nom = '" + ord + "')");
 			
-			System.out.println(ordre.getString(i + 1));
+			nomAnimal.setText(a.getString("nom"));
+			especieAnimal.setText(a.getString("especie"));
+			descripcio.setText(a.getString("descripcio"));
 			
-			System.out.println("Ronda " + i);
-			
-		}
-		
-		System.out.println("Fin");
-		
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+	}
+
+	public void seleccionarFamilia(ActionEvent event) {
+
+		family = familia.getValue().toString();
+
+		ResultSet ordres;
+
+		try {
+
+			ordres = animals.executeQuery("SELECT * FROM ordres WHERE familia"
+					+ " = (SELECT codi FROM families WHERE nom = '" + family + "')");
+
+			while (ordres.next()) {	
+				ordre.getItems().add(ordres.getString("nom"));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

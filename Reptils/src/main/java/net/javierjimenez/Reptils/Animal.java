@@ -1,7 +1,5 @@
 package net.javierjimenez.Reptils;
 
-import java.net.URL;
-
 public class Animal {
 
 	private int codi;

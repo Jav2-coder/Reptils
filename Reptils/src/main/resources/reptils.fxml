@@ -80,12 +80,12 @@
                   <Insets left="17.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="animalAnt" mnemonicParsing="false" text="Anterior" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Button fx:id="animalAnt" onAction="#antAnimal" mnemonicParsing="false" text="Anterior" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="41.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="animalSeg" mnemonicParsing="false" text="Següent" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Button fx:id="animalSeg" onAction="#segAnimal" mnemonicParsing="false" text="Següent" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="152.0" />
                </GridPane.margin>

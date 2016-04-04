@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -19,7 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ComboBox;
-
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class ReptilsController implements Initializable {
@@ -49,19 +50,21 @@ public class ReptilsController implements Initializable {
 	private Connection conn = null;
 
 	private String family = null;
-	
+
 	private String ord = null;
-	
+
 	private int index = 0;
-	
-	private List<Animal> animals;
-	
+
+	private List<Animal> animals = new ArrayList<Animal>();
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
 		try {
-			//conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/reptils", "foot", "ball");
-			conn = DriverManager.getConnection("jdbc:mysql://172.17.0.1:3306/reptils", "foot", "ball");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/reptils", "foot", "ball");
+			// conn =
+			// DriverManager.getConnection("jdbc:mysql://172.17.0.1:3306/reptils",
+			// "foot", "ball");
 			beasts = conn.createStatement();
 		} catch (SQLException e) {
 			Alert alert = new Alert(AlertType.ERROR);
@@ -77,23 +80,53 @@ public class ReptilsController implements Initializable {
 
 	public void seleccionarOrdre(ActionEvent event) {
 
-		ord = ordre.getValue().toString();
-		
-		ResultSet a;
-		
-		try {
-			a = beasts.executeQuery("SELECT * FROM animals WHERE ordre = "
-					+ "(SELECT codi from ordres WHERE nom = '" + ord + "')");
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if (ordre.getItems() != null && !ordre.getItems().isEmpty()) {
+
+			animals.clear();
+
+			ord = ordre.getValue().toString();
+
+			ResultSet a;
+
+			try {
+				a = beasts.executeQuery(
+						"SELECT * FROM animals WHERE ordre = " + "(SELECT codi from ordres WHERE nom = '" + ord + "')");
+
+				while (a.next()) {
+					Animal A = new Animal(a.getInt("codi"), a.getString("nom"), a.getInt("ordre"),
+							a.getString("especie"), a.getString("descripcio"), a.getString("estat"),
+							a.getString("imatge"));
+					animals.add(A);
+				}
+
+				System.out.println(animals.size());
+
+				if (index == 0 && index == (animals.size() - 1)) {
+					animalAnt.setDisable(true);
+					animalSeg.setDisable(true);
+				} else {
+					animalAnt.setDisable(true);
+					animalSeg.setDisable(false);
+				}
+
+				imgAnimal.setImage(new Image(animals.get(index).getImatge()));
+				descripcio.setText(animals.get(index).getDescripcio());
+				nomAnimal.setText(animals.get(index).getNom());
+				especieAnimal.setText(animals.get(index).getEspecie());
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	public void seleccionarFamilia(ActionEvent event) {
 
 		ordre.getItems().clear();
-		
+		descripcio.setText("");
+		nomAnimal.setText("");
+		especieAnimal.setText("");
+
 		family = familia.getValue().toString();
 
 		ResultSet ordres;
@@ -103,12 +136,20 @@ public class ReptilsController implements Initializable {
 			ordres = beasts.executeQuery("SELECT * FROM ordres WHERE familia"
 					+ " = (SELECT codi FROM families WHERE nom = '" + family + "')");
 
-			while (ordres.next()) {	
+			while (ordres.next()) {
 				ordre.getItems().add(ordres.getString("nom"));
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void segAnimal(ActionEvent event) {
+
+	}
+
+	public void antAnimal(ActionEvent event) {
+
 	}
 }

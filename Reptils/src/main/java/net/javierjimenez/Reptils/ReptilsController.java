@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import java.sql.Statement;
@@ -43,7 +44,7 @@ public class ReptilsController implements Initializable {
 	@FXML
 	private ComboBox<String> estatAnimal;
 
-	private Statement animals = null;
+	private Statement beasts = null;
 
 	private Connection conn = null;
 
@@ -51,12 +52,17 @@ public class ReptilsController implements Initializable {
 	
 	private String ord = null;
 	
+	private int index = 0;
+	
+	private List<Animal> animals;
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
 		try {
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/reptils", "foot", "ball");
-			animals = conn.createStatement();
+			//conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/reptils", "foot", "ball");
+			conn = DriverManager.getConnection("jdbc:mysql://172.17.0.1:3306/reptils", "foot", "ball");
+			beasts = conn.createStatement();
 		} catch (SQLException e) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Problema de conexión con BD");
@@ -73,17 +79,11 @@ public class ReptilsController implements Initializable {
 
 		ord = ordre.getValue().toString();
 		
-		System.out.println(ord);
-		
 		ResultSet a;
 		
 		try {
-			a = animals.executeQuery("SELECT * FROM animals WHERE ordre = "
+			a = beasts.executeQuery("SELECT * FROM animals WHERE ordre = "
 					+ "(SELECT codi from ordres WHERE nom = '" + ord + "')");
-			
-			nomAnimal.setText(a.getString("nom"));
-			especieAnimal.setText(a.getString("especie"));
-			descripcio.setText(a.getString("descripcio"));
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -92,13 +92,15 @@ public class ReptilsController implements Initializable {
 
 	public void seleccionarFamilia(ActionEvent event) {
 
+		ordre.getItems().clear();
+		
 		family = familia.getValue().toString();
 
 		ResultSet ordres;
 
 		try {
 
-			ordres = animals.executeQuery("SELECT * FROM ordres WHERE familia"
+			ordres = beasts.executeQuery("SELECT * FROM ordres WHERE familia"
 					+ " = (SELECT codi FROM families WHERE nom = '" + family + "')");
 
 			while (ordres.next()) {	

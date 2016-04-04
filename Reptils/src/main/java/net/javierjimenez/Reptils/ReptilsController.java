@@ -53,7 +53,7 @@ public class ReptilsController implements Initializable {
 
 	private String ord = null;
 
-	private int index = 0;
+	private int index;
 
 	private List<Animal> animals = new ArrayList<Animal>();
 
@@ -76,6 +76,9 @@ public class ReptilsController implements Initializable {
 			System.exit(0);
 		}
 		familia.getItems().addAll("Amfibis", "Rèptils");
+
+		animalAnt.setDisable(true);
+		animalSeg.setDisable(true);
 	}
 
 	public void seleccionarOrdre(ActionEvent event) {
@@ -83,6 +86,8 @@ public class ReptilsController implements Initializable {
 		if (ordre.getItems() != null && !ordre.getItems().isEmpty()) {
 
 			animals.clear();
+
+			index = 0;
 
 			ord = ordre.getValue().toString();
 
@@ -99,12 +104,7 @@ public class ReptilsController implements Initializable {
 					animals.add(A);
 				}
 
-				System.out.println(animals.size());
-
-				if (index == 0 && index == (animals.size() - 1)) {
-					animalAnt.setDisable(true);
-					animalSeg.setDisable(true);
-				} else {
+				if (index == 0 && index != (animals.size() - 1)) {
 					animalAnt.setDisable(true);
 					animalSeg.setDisable(false);
 				}
@@ -113,7 +113,7 @@ public class ReptilsController implements Initializable {
 				descripcio.setText(animals.get(index).getDescripcio());
 				nomAnimal.setText(animals.get(index).getNom());
 				especieAnimal.setText(animals.get(index).getEspecie());
-				
+
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -147,9 +147,45 @@ public class ReptilsController implements Initializable {
 
 	public void segAnimal(ActionEvent event) {
 
+		if (animals.size() > 1) {
+
+			index++;
+
+			imgAnimal.setImage(new Image(animals.get(index).getImatge()));
+			descripcio.setText(animals.get(index).getDescripcio());
+			nomAnimal.setText(animals.get(index).getNom());
+			especieAnimal.setText(animals.get(index).getEspecie());
+
+			if (index > 0) {
+				animalAnt.setDisable(false);
+			}
+
+			if (index == (animals.size() - 1)) {
+				animalSeg.setDisable(true);
+				animalAnt.setDisable(false);
+			}
+		}
 	}
 
 	public void antAnimal(ActionEvent event) {
 
+		if (index != 0) {
+
+			index--;
+
+			imgAnimal.setImage(new Image(animals.get(index).getImatge()));
+			descripcio.setText(animals.get(index).getDescripcio());
+			nomAnimal.setText(animals.get(index).getNom());
+			especieAnimal.setText(animals.get(index).getEspecie());
+
+			if (index != 0) {
+				animalSeg.setDisable(false);
+			}
+
+			if (index == 0) {
+				animalSeg.setDisable(false);
+				animalAnt.setDisable(true);
+			}
+		}
 	}
 }

@@ -43,7 +43,7 @@ public class ReptilsController implements Initializable {
 	@FXML
 	private ComboBox<String> ordre;
 	@FXML
-	private ComboBox<String> estatAnimal;
+	private ComboBox<String> estatAnimal = new ComboBox<>();
 
 	private Statement beasts = null;
 
@@ -61,10 +61,8 @@ public class ReptilsController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 
 		try {
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/reptils", "foot", "ball");
-			// conn =
-			// DriverManager.getConnection("jdbc:mysql://172.17.0.1:3306/reptils",
-			// "foot", "ball");
+			//conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/reptils", "foot", "ball");
+			conn = DriverManager.getConnection("jdbc:mysql://172.17.0.2:3306/reptils", "foot", "ball");
 			beasts = conn.createStatement();
 		} catch (SQLException e) {
 			Alert alert = new Alert(AlertType.ERROR);
@@ -86,6 +84,8 @@ public class ReptilsController implements Initializable {
 		if (ordre.getItems() != null && !ordre.getItems().isEmpty()) {
 
 			index = 0;
+			
+			generarEstats();
 			
 			animals.clear();
 
@@ -116,6 +116,7 @@ public class ReptilsController implements Initializable {
 				descripcio.setText(animals.get(index).getDescripcio());
 				nomAnimal.setText(animals.get(index).getNom());
 				especieAnimal.setText(animals.get(index).getEspecie());
+				estatAnimal.setValue(animals.get(index).getEstat());
 
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -123,15 +124,32 @@ public class ReptilsController implements Initializable {
 		}
 	}
 
+	public void generarEstats(){
+		estatAnimal.getItems().addAll(
+				"Extinta",
+				"Extinta en estat salvatge",
+				"En perill greu",
+				"En perill",
+				"Vulnerable",
+				"Depèn de la conservació",
+				"Gairebé amenaçada",
+				"Risc mínim",
+				"No avaluada");
+	}
+	
 	public void seleccionarFamilia(ActionEvent event) {
 
 		animalAnt.setDisable(true);
 		animalSeg.setDisable(true);
 		
 		ordre.getItems().clear();
+		estatAnimal.getItems().clear();
+		
 		descripcio.setText("");
 		nomAnimal.setText("");
 		especieAnimal.setText("");
+		estatAnimal.setValue("");
+		imgAnimal.setImage(null);
 
 		family = familia.getValue().toString();
 
@@ -161,6 +179,7 @@ public class ReptilsController implements Initializable {
 			descripcio.setText(animals.get(index).getDescripcio());
 			nomAnimal.setText(animals.get(index).getNom());
 			especieAnimal.setText(animals.get(index).getEspecie());
+			estatAnimal.setValue(animals.get(index).getEstat());
 
 			if (index > 0) {
 				animalAnt.setDisable(false);
@@ -183,6 +202,7 @@ public class ReptilsController implements Initializable {
 			descripcio.setText(animals.get(index).getDescripcio());
 			nomAnimal.setText(animals.get(index).getNom());
 			especieAnimal.setText(animals.get(index).getEspecie());
+			estatAnimal.setValue(animals.get(index).getEstat());
 
 			if (index != 0) {
 				animalSeg.setDisable(false);

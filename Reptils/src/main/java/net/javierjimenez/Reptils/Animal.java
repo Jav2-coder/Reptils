@@ -17,7 +17,7 @@ public class Animal {
 		this.especie = species;
 		this.descripcio = description;
 		this.estat = state;
-		this.imatge = image;
+		this.imatge = image.replace("://", ":");
 	}
 	
 	public int getCodi() {

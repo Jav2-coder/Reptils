@@ -85,9 +85,9 @@ public class ReptilsController implements Initializable {
 
 		if (ordre.getItems() != null && !ordre.getItems().isEmpty()) {
 
-			animals.clear();
-
 			index = 0;
+			
+			animals.clear();
 
 			ord = ordre.getValue().toString();
 
@@ -107,6 +107,9 @@ public class ReptilsController implements Initializable {
 				if (index == 0 && index != (animals.size() - 1)) {
 					animalAnt.setDisable(true);
 					animalSeg.setDisable(false);
+				} else if (index == 0 && index == (animals.size() - 1)) {
+					animalAnt.setDisable(true);
+					animalSeg.setDisable(true);
 				}
 
 				imgAnimal.setImage(new Image(animals.get(index).getImatge()));
@@ -122,6 +125,9 @@ public class ReptilsController implements Initializable {
 
 	public void seleccionarFamilia(ActionEvent event) {
 
+		animalAnt.setDisable(true);
+		animalSeg.setDisable(true);
+		
 		ordre.getItems().clear();
 		descripcio.setText("");
 		nomAnimal.setText("");

@@ -56,6 +56,8 @@ public class ReptilsController implements Initializable {
 	private int index;
 
 	private List<Animal> animals = new ArrayList<Animal>();
+	
+	private ResultSet a;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -63,7 +65,7 @@ public class ReptilsController implements Initializable {
 		try {
 			//conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/reptils", "foot", "ball");
 			conn = DriverManager.getConnection("jdbc:mysql://172.17.0.2:3306/reptils", "foot", "ball");
-			beasts = conn.createStatement();
+			beasts = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		} catch (SQLException e) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Problema de conexión con BD");
@@ -77,6 +79,7 @@ public class ReptilsController implements Initializable {
 
 		animalAnt.setDisable(true);
 		animalSeg.setDisable(true);
+		guardar.setDisable(true);
 	}
 
 	public void seleccionarOrdre(ActionEvent event) {
@@ -85,17 +88,17 @@ public class ReptilsController implements Initializable {
 
 			index = 0;
 			
+			guardar.setDisable(false);
+			
 			generarEstats();
 			
 			animals.clear();
 
 			ord = ordre.getValue().toString();
 
-			ResultSet a;
-
 			try {
-				a = beasts.executeQuery(
-						"SELECT * FROM animals WHERE ordre = " + "(SELECT codi from ordres WHERE nom = '" + ord + "')");
+				a = beasts.executeQuery("SELECT * FROM animals WHERE ordre = "
+						+ "(SELECT codi from ordres WHERE nom = '" + ord + "')");
 
 				while (a.next()) {
 					Animal A = new Animal(a.getInt("codi"), a.getString("nom"), a.getInt("ordre"),
@@ -125,6 +128,7 @@ public class ReptilsController implements Initializable {
 	}
 
 	public void generarEstats(){
+		
 		estatAnimal.getItems().addAll(
 				"Extinta",
 				"Extinta en estat salvatge",
@@ -141,6 +145,7 @@ public class ReptilsController implements Initializable {
 
 		animalAnt.setDisable(true);
 		animalSeg.setDisable(true);
+		guardar.setDisable(true);
 		
 		ordre.getItems().clear();
 		estatAnimal.getItems().clear();
@@ -213,5 +218,53 @@ public class ReptilsController implements Initializable {
 				animalAnt.setDisable(true);
 			}
 		}
+	}
+	
+	public void actualizarDatos(ActionEvent event){
+		boolean name, description, species, state; 
+		
+		name = nomAnimal.getText().equals(animals.get(index).getNom());
+		description = descripcio.getText().equals(animals.get(index).getDescripcio());
+		species = especieAnimal.getText().equals(animals.get(index).getEspecie());
+		state = estatAnimal.getValue().equals(animals.get(index).getEstat());
+		
+		if(!name || !description || !species || !state){
+			
+			try {
+				
+				a.absolute(index + 1);
+				
+				a.updateString("nom", nomAnimal.getText());
+				a.updateString("especie", especieAnimal.getText());
+				a.updateString("descripcio", descripcio.getText());
+				a.updateString("estat", estatAnimal.getValue());
+				
+				a.updateRow();
+				
+				animals.get(index).setNom(nomAnimal.getText());
+				animals.get(index).setEspecie(especieAnimal.getText());
+				animals.get(index).setDescripcio(descripcio.getText());
+				animals.get(index).setEstat(estatAnimal.getValue());
+				
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Actualización de la BD");
+				alert.setHeaderText("Success!");
+				alert.setContentText("Los datos se han actualizado correctamente");
+				alert.showAndWait();
+				
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			}
+			
+		} else {
+			
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("WARNING: Actualización BD");
+			alert.setHeaderText("Warning!");
+			alert.setContentText("No hay cambios en los datos\npara generar la actualización.");
+			alert.showAndWait();
+			
+		}	
 	}
 }

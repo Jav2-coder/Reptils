@@ -40,7 +40,7 @@
                   <Insets bottom="-55.0" left="240.0" />
                </GridPane.margin>
             </Label>
-            <TextArea fx:id="descripcio" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="139.0" prefWidth="265.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TextArea fx:id="descripcio" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="139.0" prefWidth="265.0" style="-fx-border-color: black;" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets top="16.0" />
                </GridPane.margin>
@@ -75,17 +75,17 @@
                   <Insets left="70.0" />
                </GridPane.margin>
             </TextField>
-            <Button fx:id="guardar" disable="true" mnemonicParsing="false" prefHeight="26.0" prefWidth="263.0" text="Desar els canvis" GridPane.rowIndex="2">
+            <Button fx:id="guardar" mnemonicParsing="false" onAction="#actualizarDatos" prefHeight="26.0" prefWidth="263.0" text="Desar els canvis" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="17.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="animalAnt" onAction="#antAnimal" mnemonicParsing="false" text="Anterior" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Button fx:id="animalAnt" mnemonicParsing="false" onAction="#antAnimal" text="Anterior" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="41.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="animalSeg" onAction="#segAnimal" mnemonicParsing="false" text="Següent" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Button fx:id="animalSeg" mnemonicParsing="false" onAction="#segAnimal" text="Següent" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="152.0" />
                </GridPane.margin>
